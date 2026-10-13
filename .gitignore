@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+coverage/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Local files
+*.local
+.DS_Store
