@@ -2,10 +2,13 @@ interface PlaceholderPageProps {
   title: string;
 }
 
-export function PlaceholderPage({ title }: PlaceholderPageProps) {
+export function PlaceholderPage({
+  title,
+}: PlaceholderPageProps) {
   return (
-    <main>
-      <h1>{title}</h1>
-    </main>
+    <section aria-labelledby="page-title">
+      <h1 id="page-title">{title}</h1>
+      <p>This module will be implemented in a later phase.</p>
+    </section>
   );
 }
