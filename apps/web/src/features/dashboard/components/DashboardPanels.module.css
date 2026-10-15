@@ -1,0 +1,104 @@
+.kpiCard {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+}
+
+.kpiLabel {
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.kpiValue {
+  margin: 14px 0 0;
+  color: var(--color-text);
+  font-size: clamp(21px, 2vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.panel {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+}
+
+.panel h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 650;
+}
+
+.panelDescription {
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.chartContainer {
+  width: 100%;
+  height: 280px;
+  margin-top: 24px;
+}
+
+.tableWrapper {
+  width: 100%;
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  min-width: 580px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th {
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.table th,
+.table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table td {
+  font-size: 13px;
+}
+
+.table a {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.table a:hover {
+  text-decoration: underline;
+}
+
+.table a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+@media (max-width: 560px) {
+  .panel,
+  .kpiCard {
+    padding: 18px;
+  }
+
+  .chartContainer {
+    height: 240px;
+  }
+}

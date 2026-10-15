@@ -1,41 +1,51 @@
 import type { ReactNode } from 'react';
 
+import { KpiCard } from '../components/KpiCard';
+import { PaymentStatusChart } from '../components/PaymentStatusChart';
+import { RecentTransactions } from '../components/RecentTransactions';
+import { TransactionVolumeChart } from '../components/TransactionVolumeChart';
+
 import { useDashboardMetrics } from '../hooks/useDashboardMetrics';
+import { useDashboardActivity } from '../hooks/useDashboardActivity';
+
 import { formatUsdMinor } from '../utils/formatUsdMinor';
 
 import styles from './DashboardPage.module.css';
 
 export function DashboardPage() {
-  const {
-    data,
-    isPending,
-    isError,
-    refetch,
-  } = useDashboardMetrics();
+  const metricsQuery = useDashboardMetrics();
+  const activityQuery = useDashboardActivity();
 
   let content: ReactNode;
 
-  if (isPending) {
+  if (metricsQuery.isPending || activityQuery.isPending) {
     content = (
       <p role="status" className={styles.message}>
-        Loading dashboard metrics...
+        Loading dashboard...
       </p>
     );
-  } else if (isError && !data) {
+  } else if (metricsQuery.isError || activityQuery.isError) {
     content = (
       <div role="alert" className={styles.message}>
-        <p>Unable to load dashboard metrics.</p>
+        <p>Unable to load dashboard information.</p>
 
         <button
           type="button"
           className={styles.retryButton}
-          onClick={() => void refetch()}
+          onClick={() => {
+            void metricsQuery.refetch();
+            void activityQuery.refetch();
+          }}
         >
           Try again
         </button>
       </div>
     );
-  } else if (!data || data.totalPayments === 0) {
+  } else if (
+    !metricsQuery.data ||
+    !activityQuery.data ||
+    metricsQuery.data.totalPayments === 0
+  ) {
     content = (
       <div className={styles.message}>
         <h2>No payment activity yet</h2>
@@ -46,71 +56,78 @@ export function DashboardPage() {
       </div>
     );
   } else {
-    const metrics = [
+    const metrics = metricsQuery.data;
+    const activity = activityQuery.data;
+
+    const kpis = [
       {
         label: 'Processed Volume',
-        value: formatUsdMinor(
-          data.grossProcessedVolumeMinor,
-        ),
+        value: formatUsdMinor(metrics.grossProcessedVolumeMinor),
       },
       {
         label: 'Net Processed Volume',
-        value: formatUsdMinor(
-          data.netProcessedVolumeMinor,
-        ),
+        value: formatUsdMinor(metrics.netProcessedVolumeMinor),
       },
       {
         label: 'Refunded Volume',
-        value: formatUsdMinor(
-          data.refundedVolumeMinor,
-        ),
+        value: formatUsdMinor(metrics.refundedVolumeMinor),
       },
       {
         label: 'Success Rate',
         value:
-          data.successRatePercent === null
+          metrics.successRatePercent === null
             ? 'N/A'
-            : `${data.successRatePercent.toFixed(1)}%`,
+            : `${metrics.successRatePercent.toFixed(1)}%`,
       },
       {
         label: 'Total Payments',
-        value: data.totalPayments.toLocaleString('en-US'),
+        value: metrics.totalPayments.toLocaleString('en-US'),
       },
       {
         label: 'Successful Payments',
-        value: data.successfulPayments.toLocaleString('en-US'),
+        value: metrics.successfulPayments.toLocaleString('en-US'),
       },
       {
         label: 'Failed Payments',
-        value: data.failedPayments.toLocaleString('en-US'),
+        value: metrics.failedPayments.toLocaleString('en-US'),
       },
       {
         label: 'Pending Payments',
-        value: data.pendingPayments.toLocaleString('en-US'),
+        value: metrics.pendingPayments.toLocaleString('en-US'),
       },
     ];
 
     content = (
-      <dl className={styles.metricsGrid}>
-        {metrics.map((metric) => (
-          <div key={metric.label} className={styles.metricCard}>
-            <dt className={styles.metricLabel}>
-              {metric.label}
-            </dt>
+      <>
+        <dl className={styles.metricsGrid}>
+          {kpis.map((kpi) => (
+            <KpiCard
+              key={kpi.label}
+              label={kpi.label}
+              value={kpi.value}
+            />
+          ))}
+        </dl>
 
-            <dd className={styles.metricValue}>
-              {metric.value}
-            </dd>
-          </div>
-        ))}
-      </dl>
+        <div className={styles.chartsGrid}>
+          <TransactionVolumeChart
+            points={activity.dailyVolume}
+          />
+
+          <PaymentStatusChart metrics={metrics} />
+        </div>
+
+        <RecentTransactions
+          transactions={activity.recentTransactions}
+        />
+      </>
     );
   }
 
   return (
     <section
-      aria-labelledby="dashboard-title"
       className={styles.dashboard}
+      aria-labelledby="dashboard-title"
     >
       <header className={styles.pageHeader}>
         <div>
@@ -118,9 +135,7 @@ export function DashboardPage() {
             PAYMENT OPERATIONS
           </p>
 
-          <h1 id="dashboard-title">
-            Dashboard
-          </h1>
+          <h1 id="dashboard-title">Dashboard</h1>
 
           <p className={styles.description}>
             Overview of merchant payment activity.

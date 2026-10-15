@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import userEvent from '@testing-library/user-event';
 
 import {
@@ -12,6 +13,36 @@ import type { DashboardMetrics } from '../types/dashboard.types';
 
 import { getDashboardMetrics } from '../api/getDashboardMetrics';
 import { DashboardPage } from './DashboardPage';
+
+vi.mock('../components/TransactionVolumeChart', () => ({
+  TransactionVolumeChart: () => (
+    <div data-testid="transaction-volume-chart" />
+  ),
+}));
+
+vi.mock('../components/PaymentStatusChart', () => ({
+  PaymentStatusChart: () => (
+    <div data-testid="payment-status-chart" />
+  ),
+}));
+
+vi.mock(
+  '../../features/dashboard/components/TransactionVolumeChart',
+  () => ({
+    TransactionVolumeChart: () => (
+      <div data-testid="transaction-volume-chart" />
+    ),
+  }),
+);
+
+vi.mock(
+  '../../features/dashboard/components/PaymentStatusChart',
+  () => ({
+    PaymentStatusChart: () => (
+      <div data-testid="payment-status-chart" />
+    ),
+  }),
+);
 
 vi.mock('../api/getDashboardMetrics', () => ({
   getDashboardMetrics: vi.fn(),
@@ -43,7 +74,9 @@ function renderDashboard() {
 
   render(
     <QueryClientProvider client={queryClient}>
-      <DashboardPage />
+      <MemoryRouter initialEntries={['/']}>
+        <DashboardPage />
+      </MemoryRouter>
     </QueryClientProvider>,
   );
 }
