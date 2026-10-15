@@ -1,7 +1,7 @@
 import type {
   PaymentTransaction,
   RefundRecord,
-} from '../../../domain/payments/payment.types.ts';
+} from '../../../domain/payments/payment.types';
 
 import type {
   DashboardMetrics,
