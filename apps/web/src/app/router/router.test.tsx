@@ -2,6 +2,11 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
+
+import {
   createMemoryRouter,
   RouterProvider,
 } from 'react-router';
@@ -11,13 +16,25 @@ import { describe, expect, it } from 'vitest';
 import { appRoutes } from './routeConfig';
 
 function renderAppAt(path: string) {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
   const router = createMemoryRouter(appRoutes, {
     initialEntries: [path],
   });
 
   const user = userEvent.setup();
 
-  render(<RouterProvider router={router} />);
+  render(
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>,
+  );
 
   return { user };
 }
