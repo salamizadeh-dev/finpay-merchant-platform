@@ -1,11 +1,43 @@
-import { demoTransactions } from '../data/demoDashboardData';
+import type {
+  DashboardActivity,
+  DashboardDateRange,
+} from '../types/dashboard.types';
 
-import type { DashboardActivity } from '../types/dashboard.types';
+import {
+  demoTransactions,
+  demoRefunds,
+} from '../data/demoDashboardData';
 
-import { buildDashboardActivity } from '../utils/buildDashboardActivity';
+import {
+  filterDashboardData,
+} from '../utils/filterDashboardData';
 
-export function getDashboardActivity(): Promise<DashboardActivity> {
-  return Promise.resolve(
-    buildDashboardActivity(demoTransactions),
+import {
+  buildDashboardActivity,
+} from '../utils/buildDashboardActivity';
+
+import {
+  fillDailyVolume,
+} from '../utils/fillDailyVolume';
+
+export function getDashboardActivity(
+  range: DashboardDateRange,
+): Promise<DashboardActivity> {
+  const filtered = filterDashboardData(
+    demoTransactions,
+    demoRefunds,
+    range,
   );
+
+  const activity = buildDashboardActivity(
+    filtered.transactions,
+  );
+
+  return Promise.resolve({
+    ...activity,
+    dailyVolume: fillDailyVolume(
+      activity.dailyVolume,
+      range,
+    ),
+  });
 }

@@ -1,10 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getDashboardActivity } from '../api/getDashboardActivity';
+import type {
+  DashboardDateRange,
+} from '../types/dashboard.types';
 
-export function useDashboardActivity() {
+import {
+  getDashboardActivity,
+} from '../api/getDashboardActivity';
+
+export function useDashboardActivity(
+  range: DashboardDateRange,
+) {
   return useQuery({
-    queryKey: ['dashboard', 'activity'],
-    queryFn: getDashboardActivity,
+    queryKey: [
+      'dashboard',
+      'activity',
+      range.startDate,
+      range.endDate,
+    ],
+    queryFn: () => getDashboardActivity(range),
   });
 }

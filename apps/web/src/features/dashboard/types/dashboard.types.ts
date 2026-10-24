@@ -23,3 +23,10 @@ export interface DashboardActivity {
   dailyVolume: DailyVolumePoint[];
   recentTransactions: PaymentTransaction[];
 }
+
+export type DashboardPeriod = 'all' | 'last5' | 'last3';
+
+export interface DashboardDateRange {
+  startDate: string;
+  endDate: string;
+}
