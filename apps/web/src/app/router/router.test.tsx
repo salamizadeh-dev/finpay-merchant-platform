@@ -29,7 +29,7 @@ describe('FinPay application routing', () => {
 
     expect(
       await screen.findByRole('heading', {
-        name: 'Dashboard',
+        name: 'Merchant Dashboard',
       }),
     ).toBeInTheDocument();
 
@@ -109,7 +109,7 @@ describe('FinPay application routing', () => {
 
     expect(
       await screen.findByRole('heading', {
-        name: 'Dashboard',
+        name: 'Merchant Dashboard',
       }),
     ).toBeInTheDocument();
   });

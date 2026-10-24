@@ -101,7 +101,7 @@ describe('DashboardPage', () => {
     renderDashboard();
 
     expect(
-      await screen.findByText('No payment activity yet'),
+      await screen.findByText('No payment activity in this period'),
     ).toBeInTheDocument();
   });
 
