@@ -1,13 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
-import userEvent from '@testing-library/user-event';
+import { screen } from '@testing-library/react';
 
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
+import userEvent from '@testing-library/user-event';
+import { renderWithProviders } from '../../../test/renderWithProviders';
 
 import type { DashboardMetrics } from '../types/dashboard.types';
 
@@ -64,21 +60,7 @@ const sampleMetrics: DashboardMetrics = {
 };
 
 function renderDashboard() {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
-
-  render(
-    <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={['/']}>
-        <DashboardPage />
-      </MemoryRouter>
-    </QueryClientProvider>,
-  );
+  return renderWithProviders(<DashboardPage />);
 }
 
 describe('DashboardPage', () => {
