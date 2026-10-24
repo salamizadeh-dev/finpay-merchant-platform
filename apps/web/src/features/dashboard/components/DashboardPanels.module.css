@@ -102,3 +102,97 @@
     height: 240px;
   }
 }
+
+/* Reporting filter */
+
+.rangeFilter {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.filterLabel {
+  color: var(--color-muted);
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.filterSelect {
+  min-width: 164px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filterSelect:hover {
+  border-color: var(--color-primary);
+}
+
+.filterSelect:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* KPI and panel refinement */
+
+.kpiCard {
+  box-shadow: 0 3px 12px rgb(20 43 75 / 3%);
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.kpiCard:hover {
+  border-color: #cbd6e6;
+  box-shadow: 0 8px 20px rgb(20 43 75 / 6%);
+}
+
+.kpiValue {
+  font-variant-numeric: tabular-nums;
+}
+
+.panel {
+  box-shadow: 0 3px 12px rgb(20 43 75 / 3%);
+}
+
+.table tbody tr:hover {
+  background: var(--color-hover);
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 650;
+  text-transform: capitalize;
+}
+
+.statusBadge[data-status='succeeded'] {
+  background: #e8f6ef;
+  color: #157347;
+}
+
+.statusBadge[data-status='failed'] {
+  background: #fcebec;
+  color: #b42332;
+}
+
+.statusBadge[data-status='pending'] {
+  background: #fff4df;
+  color: #946200;
+}
+
+@media (max-width: 560px) {
+  .rangeFilter,
+  .filterSelect {
+    width: 100%;
+  }
+}

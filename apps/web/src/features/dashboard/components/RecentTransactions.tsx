@@ -64,7 +64,14 @@ export function RecentTransactions({
                     )}
                   </td>
 
-                  <td>{transaction.status}</td>
+                  <td>
+                    <span
+                      className={styles.statusBadge}
+                      data-status={transaction.status}
+                    >
+                      {transaction.status}
+                    </span>
+                  </td>
 
                   <td>
                     {formatUsdMinor(transaction.amountMinor)}

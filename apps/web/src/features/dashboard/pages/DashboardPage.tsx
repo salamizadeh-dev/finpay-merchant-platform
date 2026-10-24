@@ -1,6 +1,7 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 
 import { KpiCard } from '../components/KpiCard';
+import { DashboardRangeFilter } from '../components/DashboardRangeFilter';
 import { PaymentStatusChart } from '../components/PaymentStatusChart';
 import { RecentTransactions } from '../components/RecentTransactions';
 import { TransactionVolumeChart } from '../components/TransactionVolumeChart';
@@ -8,13 +9,39 @@ import { TransactionVolumeChart } from '../components/TransactionVolumeChart';
 import { useDashboardMetrics } from '../hooks/useDashboardMetrics';
 import { useDashboardActivity } from '../hooks/useDashboardActivity';
 
+import type {
+  DashboardPeriod,
+} from '../types/dashboard.types';
+
+import {
+  DEMO_REPORT_AS_OF_DATE,
+  getDashboardDateRange,
+} from '../utils/dashboardDateRange';
+
 import { formatUsdMinor } from '../utils/formatUsdMinor';
 
 import styles from './DashboardPage.module.css';
 
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
+function formatUtcDay(date: string) {
+  return dateFormatter.format(
+    new Date(`${date}T00:00:00.000Z`),
+  );
+}
+
 export function DashboardPage() {
-  const metricsQuery = useDashboardMetrics();
-  const activityQuery = useDashboardActivity();
+  const [period, setPeriod] = useState<DashboardPeriod>('all');
+
+  const range = getDashboardDateRange(period);
+
+  const metricsQuery = useDashboardMetrics(range);
+  const activityQuery = useDashboardActivity(range);
 
   let content: ReactNode;
 
@@ -44,14 +71,18 @@ export function DashboardPage() {
   } else if (
     !metricsQuery.data ||
     !activityQuery.data ||
-    metricsQuery.data.totalPayments === 0
+    (
+      metricsQuery.data.totalPayments === 0 &&
+      metricsQuery.data.refundedVolumeMinor === 0
+    )
   ) {
     content = (
       <div className={styles.message}>
-        <h2>No payment activity yet</h2>
+        <h2>No payment activity in this period</h2>
+
         <p>
-          Payment metrics will appear when transaction
-          data becomes available.
+          Select a different reporting period to view
+          available payment activity.
         </p>
       </div>
     );
@@ -62,15 +93,21 @@ export function DashboardPage() {
     const kpis = [
       {
         label: 'Processed Volume',
-        value: formatUsdMinor(metrics.grossProcessedVolumeMinor),
+        value: formatUsdMinor(
+          metrics.grossProcessedVolumeMinor,
+        ),
       },
       {
         label: 'Net Processed Volume',
-        value: formatUsdMinor(metrics.netProcessedVolumeMinor),
+        value: formatUsdMinor(
+          metrics.netProcessedVolumeMinor,
+        ),
       },
       {
         label: 'Refunded Volume',
-        value: formatUsdMinor(metrics.refundedVolumeMinor),
+        value: formatUsdMinor(
+          metrics.refundedVolumeMinor,
+        ),
       },
       {
         label: 'Success Rate',
@@ -130,22 +167,50 @@ export function DashboardPage() {
       aria-labelledby="dashboard-title"
     >
       <header className={styles.pageHeader}>
-        <div>
+        <div className={styles.headingText}>
           <p className={styles.eyebrow}>
-            PAYMENT OPERATIONS
+            FINPAY / PAYMENT OPERATIONS
           </p>
 
-          <h1 id="dashboard-title">Dashboard</h1>
+          <h1 id="dashboard-title">
+            Merchant Dashboard
+          </h1>
 
           <p className={styles.description}>
-            Overview of merchant payment activity.
+            Monitor payment performance, transaction
+            activity, and refund volume.
           </p>
         </div>
 
-        <span className={styles.demoBadge}>
-          Demo Data · USD
-        </span>
+        <div className={styles.headerControls}>
+          <DashboardRangeFilter
+            value={period}
+            onChange={setPeriod}
+          />
+
+          <span className={styles.demoBadge}>
+            DEMO · USD
+          </span>
+        </div>
       </header>
+
+      <div className={styles.reportingInfo}>
+        <span className={styles.reportingDot} aria-hidden="true" />
+
+        <span>
+          Reporting period (UTC):{' '}
+          <strong>
+            {formatUtcDay(range.startDate)}
+            {' — '}
+            {formatUtcDay(range.endDate)}
+          </strong>
+        </span>
+
+        <span className={styles.snapshotLabel}>
+          Demo snapshot as of{' '}
+          {formatUtcDay(DEMO_REPORT_AS_OF_DATE)}
+        </span>
+      </div>
 
       {content}
     </section>

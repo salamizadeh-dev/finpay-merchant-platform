@@ -1,49 +1,97 @@
 .dashboard {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 24px;
 }
 
 .pageHeader {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
+  justify-content: space-between;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 24px;
+}
+
+.headingText {
+  max-width: 620px;
 }
 
 .pageHeader h1 {
   margin: 0;
-  font-size: clamp(26px, 3vw, 34px);
-  font-weight: 700;
-  letter-spacing: -0.04em;
+  color: var(--color-text);
+  font-size: clamp(27px, 3vw, 36px);
+  font-weight: 750;
+  letter-spacing: -0.045em;
+  line-height: 1.15;
 }
 
 .eyebrow {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   color: var(--color-primary);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
 }
 
 .description {
-  margin: 10px 0 0;
+  margin: 12px 0 0;
   color: var(--color-muted);
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.7;
+}
+
+.headerControls {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .demoBadge {
   display: inline-flex;
   align-items: center;
+  min-height: 40px;
   border: 1px solid var(--color-border);
-  border-radius: 6px;
-  padding: 8px 12px;
+  border-radius: 9px;
+  padding: 0 13px;
+  background: var(--color-surface);
+  color: var(--color-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.reportingInfo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 13px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
   background: var(--color-surface);
   color: var(--color-muted);
   font-size: 12px;
-  font-weight: 500;
+  line-height: 1.5;
+}
+
+.reportingInfo strong {
+  color: var(--color-text);
+  font-weight: 650;
+}
+
+.reportingDot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.snapshotLabel {
+  margin-left: auto;
+  font-size: 11px;
 }
 
 .metricsGrid {
@@ -53,6 +101,11 @@
   margin: 0;
 }
 
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
 
 .message {
   padding: 32px;
@@ -64,6 +117,7 @@
 }
 
 .message h2 {
+  margin-top: 0;
   color: var(--color-text);
   font-size: 18px;
 }
@@ -71,12 +125,16 @@
 .retryButton {
   margin-top: 12px;
   padding: 10px 16px;
-  border: none;
+  border: 0;
   border-radius: 8px;
   background: var(--color-primary);
-  color: white;
+  color: #ffffff;
   cursor: pointer;
   font-weight: 600;
+}
+
+.retryButton:hover {
+  filter: brightness(0.92);
 }
 
 .retryButton:focus-visible {
@@ -90,24 +148,32 @@
   }
 }
 
+@media (max-width: 1100px) {
+  .chartsGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 560px) {
   .metricsGrid {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .metricCard {
-    padding: 20px;
+  .pageHeader {
+    gap: 20px;
   }
-}
 
-.chartsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
+  .headerControls {
+    width: 100%;
+    align-items: stretch;
+  }
 
-@media (max-width: 1100px) {
-  .chartsGrid {
-    grid-template-columns: minmax(0, 1fr);
+  .snapshotLabel {
+    margin-left: 15px;
+    width: 100%;
+  }
+
+  .message {
+    padding: 22px;
   }
 }
