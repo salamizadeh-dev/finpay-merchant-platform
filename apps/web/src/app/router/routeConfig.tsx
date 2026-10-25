@@ -4,6 +4,7 @@ import { AppShell } from '../components/layout/AppShell';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { RouteErrorPage } from './pages/RouteErrorPage';
+import { DashboardPage } from '../../features/dashboard/pages/DashboardPage';
 
 import { ROUTE_PATHS } from './routes';
 
@@ -16,7 +17,7 @@ export const appRoutes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <PlaceholderPage title="Dashboard" />,
+        element: <DashboardPage />,
       },
       {
         path: ROUTE_PATHS.transactions,

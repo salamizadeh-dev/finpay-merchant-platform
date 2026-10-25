@@ -1,9 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { renderWithDataRouter } from '../../test/renderWithProviders';
+
 import {
-  createMemoryRouter,
-  RouterProvider,
+  createMemoryRouter
 } from 'react-router';
 
 import { describe, expect, it } from 'vitest';
@@ -17,7 +18,7 @@ function renderAppAt(path: string) {
 
   const user = userEvent.setup();
 
-  render(<RouterProvider router={router} />);
+  renderWithDataRouter(router);
 
   return { user };
 }
@@ -28,7 +29,7 @@ describe('FinPay application routing', () => {
 
     expect(
       await screen.findByRole('heading', {
-        name: 'Dashboard',
+        name: 'Merchant Dashboard',
       }),
     ).toBeInTheDocument();
 
@@ -108,7 +109,7 @@ describe('FinPay application routing', () => {
 
     expect(
       await screen.findByRole('heading', {
-        name: 'Dashboard',
+        name: 'Merchant Dashboard',
       }),
     ).toBeInTheDocument();
   });
